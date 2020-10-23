@@ -11,6 +11,9 @@
     <AssemblyName>RezaB.Web.Helpers</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+	<PackageDescription>Extra Html Helpers.</PackageDescription>
+    <RepositoryUrl>https://github.com/masteriss/RezaB.Web</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <SccProjectName>
     </SccProjectName>
     <SccLocalPath>
