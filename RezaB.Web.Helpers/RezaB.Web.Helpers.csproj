@@ -11,7 +11,7 @@
     <AssemblyName>RezaB.Web.Helpers</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-	<PackageDescription>Extra Html Helpers.</PackageDescription>
+    <PackageDescription>Extra Html Helpers.</PackageDescription>
     <RepositoryUrl>https://github.com/masteriss/RezaB.Web</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <SccProjectName>
@@ -45,6 +45,10 @@
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RezaB.Data, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RezaB.Data.1.0.0\lib\net452\RezaB.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -54,7 +58,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\RadiusR-Manager\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -147,10 +151,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RadiusR-Manager\RezaB.Data\RezaB.Data.csproj">
-      <Project>{535c2430-69f1-49be-a6d3-450d8fc910d2}</Project>
-      <Name>RezaB.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RezaB.Web\RezaB.Web.csproj">
       <Project>{c306759a-6720-47e9-bc6b-d4a394632184}</Project>
       <Name>RezaB.Web</Name>
