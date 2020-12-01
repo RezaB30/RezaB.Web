@@ -110,12 +110,28 @@ namespace RezaB.Web.Captcha
         {
             get
             {
+                if (_fontFaces == null)
+                {
+                    _fontFaces = new FontFamily[]
+                    {
+                        new FontFamily("Arial"),
+                        new FontFamily("Verdana"),
+                        new FontFamily("Tahoma"),
+                        new FontFamily("Trebuchet MS"),
+                        new FontFamily("Impact"),
+                        new FontFamily("Times New Roman"),
+                        new FontFamily("Georgia"),
+                        new FontFamily("Courier"),
+                        new FontFamily("Comic Sans MS"),
+                    };
+                }
+
                 return _fontFaces;
             }
             set
             {
                 if (value != null && value.Any())
-                    _fontFaces = value.ToArray();
+                    _fontFaces = value;
             }
         }
 
@@ -125,30 +141,6 @@ namespace RezaB.Web.Captcha
         private float _fontSize = 24f;
         private ushort _fontAlpha = 200;
         private float _noisePercentage = 0.25f;
-        private FontFamily[] _fontFaces = new FontFamily[]
-        {
-            new FontFamily("Arial"),
-            new FontFamily("Calibri"),
-            new FontFamily("Calisto MT"),
-            new FontFamily("Cambria"),
-            new FontFamily("Candara"),
-            new FontFamily("Century"),
-            new FontFamily("Gothic"),
-            new FontFamily("Comic Sans MS"),
-            new FontFamily("Consolas"),
-            new FontFamily("Constantia"),
-            new FontFamily("Corbel"),
-            new FontFamily("Courier New"),
-            new FontFamily("David"),
-            new FontFamily("Euphemia"),
-            new FontFamily("Georgia"),
-            new FontFamily("Lucida Console"),
-            new FontFamily("News Gothic MT"),
-            new FontFamily("Segoe UI"),
-            new FontFamily("Tahoma"),
-            new FontFamily("Times New Roman"),
-            new FontFamily("Trebuchet MS"),
-            new FontFamily("Verdana"),
-        };
+        private FontFamily[] _fontFaces = null;
     }
 }
