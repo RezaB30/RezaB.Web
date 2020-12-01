@@ -11,7 +11,7 @@
     <AssemblyName>RezaB.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-	<PackageDescription>Web Accessories such as Attributes, Authentication etc.</PackageDescription>
+    <PackageDescription>Web Accessories such as Attributes, Authentication etc.</PackageDescription>
     <RepositoryUrl>https://github.com/masteriss/RezaB.Web</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <SccProjectName>
