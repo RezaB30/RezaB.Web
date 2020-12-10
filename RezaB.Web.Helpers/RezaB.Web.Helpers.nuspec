@@ -2,15 +2,18 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <title>RezaB.Web.Helpers</title>
     <authors>Reza Barzegaran</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <description>Extra Html Helpers</description>
-    <releaseNotes>Added TrafficLimitText helper.</releaseNotes>
+    <releaseNotes>Added language files.</releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>Web Helpers</tags>
     <repository type="git" url="https://github.com/masteriss/RezaB.Web" branch="master" />
   </metadata>
+  <files>
+	<file src="bin\$configuration$\**\*.resources.dll" target="lib\net452" />
+  </files>
 </package>
