@@ -21,94 +21,40 @@ namespace RezaB.Web.Authentication
     /// <typeparam name="THA">Hashing algorithm</typeparam>
     public class Authenticator<TDB, TUT, THA> where TDB : DbContext, new() where TUT : class where THA : HashAlgorithm
     {
-        /// <summary>
-        /// Signs in a user with user id without checking for password.
-        /// </summary>
-        /// <param name="owinContext">Owin context.</param>
-        /// <param name="userId">User id.</param>
-        /// <param name="extraClaims">Extra claims to add. (Name, Email and NameIdentifier is added automatically)</param>
-        /// <returns></returns>
-        public bool SignIn(IOwinContext owinContext, int userId, IEnumerable<Claim> extraClaims = null)
-        {
-            using (TDB db = new TDB())
-            {
-                var user = GetUser(db, userId);
-                if (user == null)
-                    return false;
-                // extract properties
-                var name = user.GetType().GetProperty("Name").GetValue(user) as string;
-                var email = user.GetType().GetProperty("Username").GetValue(user) as string;
-                // add claims
-                var claims = new List<Claim>()
-                {
-                    new Claim(ClaimTypes.Name, name),
-                    new Claim(ClaimTypes.Email, email),
-                    new Claim(ClaimTypes.NameIdentifier, userId.ToString())
-                };
-                // extra claims
-                if (extraClaims != null)
-                    claims.AddRange(extraClaims);
-                var identity = new ClaimsIdentity(claims, "ApplicationCookie");
-                // sign in
-                var authManager = owinContext.Authentication;
-                authManager.SignIn(identity);
-                return true;
-            }
-        }
-        /// <summary>
-        /// Signs in user with user id without checking for password and adds permissions and roles.
-        /// </summary>
-        /// <typeparam name="TRT">Role table entity.</typeparam>
-        /// <typeparam name="TPT">Permission table entity.</typeparam>
-        /// <param name="owinContext"></param>
-        /// <param name="userId"></param>
-        /// <param name="extraClaims">Extra claims to add. (Name, Email, NameIdentifier, Role and Permissions is added automatically)</param>
-        /// <returns></returns>
-        public bool SignIn<TRT, TPT>(IOwinContext owinContext, int userId, IEnumerable<Claim> extraClaims = null)
-        {
-            using (TDB db = new TDB())
-            {
-                var user = GetUser(db, userId);
-                if (user == null)
-                    return false;
-                // extract properties
-                var isEnabled = user.GetType().GetProperty("IsEnabled").GetValue(user) as bool?;
-                // enabled
-                if (isEnabled != true)
-                    return false;
-                var name = user.GetType().GetProperty("Name").GetValue(user) as string;
-                var email = user.GetType().GetProperty("Email").GetValue(user) as string;
-                var role = user.GetType().GetProperty(typeof(TRT).Name).GetValue(user);
-                var roleName = typeof(TRT).GetProperty("Name").GetValue(role) as string;
-                var permissions = role.GetType().GetProperties().FirstOrDefault(p => p.PropertyType.GenericTypeArguments.Contains(typeof(TPT))).GetValue(role) as IEnumerable<TPT>;
-                // add claims
-                var claims = new List<Claim>()
-                {
-                    new Claim(ClaimTypes.Name, name),
-                    new Claim(ClaimTypes.Email, email),
-                    new Claim(ClaimTypes.NameIdentifier, userId.ToString())
-                };
-                // extra claims
-                if (extraClaims != null)
-                    claims.AddRange(extraClaims);
-                var identity = new ClaimsIdentity(claims, "ApplicationCookie");
-                if (role == null)
-                {
-                    return false;
-                }
-                identity.AddClaim(new Claim(ClaimTypes.Role, roleName.Trim().ToLower()));
-                foreach (var permission in permissions)
-                {
-                    var permissionName = typeof(TPT).GetProperty("Name").GetValue(permission) as string;
+        #region protected properties
+        protected string UserIDColumn { get; set; }
 
-                    identity.AddClaim(new Claim("permission", permissionName.ToLower(System.Globalization.CultureInfo.InvariantCulture).Trim()));
-                }
-                // sign in
-                var authManager = owinContext.Authentication;
-                authManager.SignIn(identity);
-                return true;
-            }
+        protected string UserDisplayNameColumn { get; set; }
+
+        protected string UsernameColumn { get; set; }
+
+        protected string UserEnabledColumn { get; set; }
+
+        protected string UserPasswordColumn { get; set; }
+        #endregion
+        /// <summary>
+        /// Creates a new authenticator instance.
+        /// </summary>
+        /// <param name="userIDColumn">The expression for user's id column.</param>
+        /// <param name="userDisplayNameColumn">The expression for user's display name column.</param>
+        /// <param name="usernameColumn">The expression for user's username column.</param>
+        /// <param name="userPasswordColumn">The expression for user's password column.</param>
+        /// <param name="userEnabledColumn">The expression for user's enabled column.</param>
+        public Authenticator(
+            Expression<Func<TUT, object>> userIDColumn,
+            Expression<Func<TUT, string>> userDisplayNameColumn,
+            Expression<Func<TUT, string>> usernameColumn,
+            Expression<Func<TUT, string>> userPasswordColumn,
+            Expression<Func<TUT, bool>> userEnabledColumn
+            )
+        {
+            UserIDColumn = GetMemberName(userIDColumn.Body);
+            UserDisplayNameColumn = GetMemberName(userDisplayNameColumn.Body);
+            UsernameColumn = GetMemberName(usernameColumn.Body);
+            UserEnabledColumn = GetMemberName(userEnabledColumn.Body);
+            UserPasswordColumn = GetMemberName(userPasswordColumn.Body);
         }
+
         /// <summary>
         /// Signs in a user with username and checks the password.
         /// </summary>
@@ -116,30 +62,14 @@ namespace RezaB.Web.Authentication
         /// <param name="username">Username.</param>
         /// <param name="password">Password.</param>
         /// <returns></returns>
-        public bool SignIn(IOwinContext owinContext, string username, string password)
+        public bool SignIn(IOwinContext owinContext, string username, string password, IEnumerable<Claim> extraClaims = null)
         {
             var userId = Authenticate(username, password);
             if (!userId.HasValue)
                 return false;
-            return SignIn(owinContext, userId.Value);
+            return SignIn(owinContext, userId.Value, extraClaims);
         }
 
-        public int? Authenticate(string username, string password)
-        {
-            using (TDB db = new TDB())
-            {
-                var user = GetUser(db, username);
-                if (user == null)
-                    return null;
-                var passwordInfo = user.GetType().GetProperty("Password");
-                var passwordValue = passwordInfo.GetValue(user) as string;
-                var IdInfo = user.GetType().GetProperty("ID");
-                var IdValue = IdInfo.GetValue(user) as int?;
-                if (passwordValue.ToLower() == GetPasswordHash(password))
-                    return IdValue;
-                return null;
-            }
-        }
         /// <summary>
         /// Converts plain text password to hashed value.
         /// </summary>
@@ -154,10 +84,10 @@ namespace RezaB.Web.Authentication
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < hashed.Length; i++)
             {
-                builder.Append(hashed[i].ToString("X2"));
+                builder.Append(hashed[i].ToString("x2"));
             }
 
-            return builder.ToString().ToLower();
+            return builder.ToString();
         }
         /// <summary>
         /// Signs out user.
@@ -169,31 +99,87 @@ namespace RezaB.Web.Authentication
             authManager.SignOut();
         }
 
-        #region private methods
+        #region protected methods
+        protected virtual bool SignIn(IOwinContext owinContext, int userId, IEnumerable<Claim> extraClaims = null)
+        {
+            using (TDB db = new TDB())
+            {
+                var user = GetUser(db, userId);
+                if (user == null)
+                    return false;
+                // extract properties
+                var name = user.GetType().GetProperty(UserDisplayNameColumn).GetValue(user) as string;
+                var email = user.GetType().GetProperty(UsernameColumn).GetValue(user) as string;
+                // add claims
+                var claims = new List<Claim>()
+                {
+                    new Claim(ClaimTypes.Name, name),
+                    new Claim(ClaimTypes.Email, email),
+                    new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+                };
+                // extra claims
+                if (extraClaims != null)
+                    claims.AddRange(extraClaims);
+                var identity = new ClaimsIdentity(claims, "ApplicationCookie");
+                // sign in
+                var authManager = owinContext.Authentication;
+                authManager.SignIn(identity);
+                return true;
+            }
+        }
 
-        private TUT GetUser(TDB db, string username)
+        protected int? Authenticate(string username, string password)
+        {
+            using (TDB db = new TDB())
+            {
+                var user = GetUser(db, username);
+                if (user == null)
+                    return null;
+                var passwordInfo = user.GetType().GetProperty(UserPasswordColumn);
+                var passwordValue = passwordInfo.GetValue(user) as string;
+                var IdInfo = user.GetType().GetProperty(UserIDColumn);
+                var IdValue = IdInfo.GetValue(user) as int?;
+                if (passwordValue.ToLower() == GetPasswordHash(password))
+                    return IdValue;
+                return null;
+            }
+        }
+
+        protected TUT GetUser(TDB db, string username)
         {
             var parameterExp = Expression.Parameter(typeof(TUT), "u");
-            var memberExp = Expression.Property(parameterExp, "Email");
+            var memberExp = Expression.Property(parameterExp, UsernameColumn);
             var lower = Expression.Call(memberExp, typeof(string).GetMethod("ToLower", Type.EmptyTypes));
             var constantExp = Expression.Constant(username.ToLower(), typeof(string));
             var body = Expression.Equal(lower, constantExp);
-            var userEnabled = Expression.Property(parameterExp, "IsEnabled");
+            var userEnabled = Expression.Property(parameterExp, UserEnabledColumn);
             body = Expression.AndAlso(body, userEnabled);
             var finalExp = Expression.Lambda<Func<TUT, bool>>(body, new[] { parameterExp });
             var user = db.Set<TUT>().Where(finalExp).FirstOrDefault();
             return user;
         }
 
-        private TUT GetUser(TDB db, int id)
+        protected TUT GetUser(TDB db, int id)
         {
             var user = db.Set<TUT>().Find(id);
-            var IsEnabled = (bool)user.GetType().GetProperty("IsEnabled").GetValue(user);
+            var IsEnabled = (bool)user.GetType().GetProperty(UserEnabledColumn).GetValue(user);
             if (IsEnabled)
                 return user;
             return null;
         }
-
+      
+        protected string GetMemberName(Expression expression)
+        {
+            switch (expression.NodeType)
+            {
+                case ExpressionType.MemberAccess:
+                    return ((MemberExpression)expression).Member.Name;
+                case ExpressionType.Convert:
+                    return GetMemberName(((UnaryExpression)expression).Operand);
+                default:
+                    throw new NotSupportedException(expression.NodeType.ToString());
+            }
+        }
         #endregion
     }
 }

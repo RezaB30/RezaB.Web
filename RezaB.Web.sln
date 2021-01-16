@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RezaB.Web", "RezaB.Web\RezaB.Web.csproj", "{C306759A-6720-47E9-BC6B-D4A394632184}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RezaB.Web.Helpers", "RezaB.Web.Helpers\RezaB.Web.Helpers.csproj", "{B3ABEBC3-C40D-4A0A-BD6A-7D155B37E2C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RezaB.Web.Authentication.TestUnit", "RezaB.Web.Authentication.TestUnit\RezaB.Web.Authentication.TestUnit.csproj", "{53C03740-3286-4DC1-BDEC-E8AB05408089}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +23,15 @@ Global
 		{B3ABEBC3-C40D-4A0A-BD6A-7D155B37E2C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3ABEBC3-C40D-4A0A-BD6A-7D155B37E2C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3ABEBC3-C40D-4A0A-BD6A-7D155B37E2C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53C03740-3286-4DC1-BDEC-E8AB05408089}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53C03740-3286-4DC1-BDEC-E8AB05408089}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53C03740-3286-4DC1-BDEC-E8AB05408089}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53C03740-3286-4DC1-BDEC-E8AB05408089}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {20CF3504-3646-4246-9359-000F027A7E41}
 	EndGlobalSection
 EndGlobal

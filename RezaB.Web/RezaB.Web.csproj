@@ -106,6 +106,7 @@
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
     <Compile Include="Authentication\Authenticator.cs" />
+    <Compile Include="Authentication\AuthenticatorWithRolePermission.cs" />
     <Compile Include="AuthorizedBaseController.cs" />
     <Compile Include="BaseController.cs" />
     <Compile Include="Captcha\CaptchaImage.cs" />
