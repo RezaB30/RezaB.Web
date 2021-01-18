@@ -61,6 +61,7 @@ namespace RezaB.Web.Authentication
         /// <param name="owinContext">Owin context.</param>
         /// <param name="username">Username.</param>
         /// <param name="password">Password.</param>
+        /// <param name="extraClaims">Extra claims to be added.</param>
         /// <returns></returns>
         public bool SignIn(IOwinContext owinContext, string username, string password, IEnumerable<Claim> extraClaims = null)
         {
@@ -98,9 +99,14 @@ namespace RezaB.Web.Authentication
             var authManager = owinContext.Authentication;
             authManager.SignOut();
         }
-
-        #region protected methods
-        protected virtual bool SignIn(IOwinContext owinContext, int userId, IEnumerable<Claim> extraClaims = null)
+        /// <summary>
+        /// Signs in user with id without password check.
+        /// </summary>
+        /// <param name="owinContext">Owin context.</param>
+        /// <param name="userId">The user id.</param>
+        /// <param name="extraClaims">Extra claims to be added.</param>
+        /// <returns></returns>
+        public virtual bool SignIn(IOwinContext owinContext, int userId, IEnumerable<Claim> extraClaims = null)
         {
             using (TDB db = new TDB())
             {
@@ -127,8 +133,13 @@ namespace RezaB.Web.Authentication
                 return true;
             }
         }
-
-        protected int? Authenticate(string username, string password)
+        /// <summary>
+        /// Authenticates user with username and password, if authenticated returns user id.
+        /// </summary>
+        /// <param name="username">Username.</param>
+        /// <param name="password">Password.</param>
+        /// <returns></returns>
+        public int? Authenticate(string username, string password)
         {
             using (TDB db = new TDB())
             {
@@ -144,7 +155,7 @@ namespace RezaB.Web.Authentication
                 return null;
             }
         }
-
+        #region protected methods
         protected TUT GetUser(TDB db, string username)
         {
             var parameterExp = Expression.Parameter(typeof(TUT), "u");

@@ -41,9 +41,14 @@ namespace RezaB.Web.Authentication
             RoleNameColumn = GetMemberName(roleNameColumn.Body);
             PermissionNameColumn = GetMemberName(permissionNameColumn.Body);
         }
-
-        #region protected methods
-        protected override bool SignIn(IOwinContext owinContext, int userId, IEnumerable<Claim> extraClaims = null)
+        /// <summary>
+        /// Signs in user with id without password check.
+        /// </summary>
+        /// <param name="owinContext">Owin context.</param>
+        /// <param name="userId">The user id.</param>
+        /// <param name="extraClaims">Extra claims to be added.</param>
+        /// <returns></returns>
+        public override bool SignIn(IOwinContext owinContext, int userId, IEnumerable<Claim> extraClaims = null)
         {
             using (TDB db = new TDB())
             {
@@ -88,6 +93,5 @@ namespace RezaB.Web.Authentication
                 return true;
             }
         }
-        #endregion
     }
 }
