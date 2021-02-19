@@ -144,7 +144,6 @@
     <Compile Include="CustomAttributes\WordAndNumberAttribute.cs" />
     <Compile Include="Extentions\IQueryablePaging.cs" />
     <Compile Include="Authentication\IPrincipalExtentions.cs" />
-    <Compile Include="LocalizedLists\LocalizedList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UrlUtilities.cs" />
   </ItemGroup>
