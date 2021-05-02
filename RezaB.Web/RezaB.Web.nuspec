@@ -2,13 +2,13 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>1.1.5</version>
+    <version>1.1.6</version>
     <title>RezaB.Web</title>
     <authors>Reza Barzegaran</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <description>Web Accessories such as Attributes, Authentication etc.</description>
-    <releaseNotes>Added google recaptcha.</releaseNotes>
+    <releaseNotes>Framework update.</releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>Web Authentication Utilities Attributes</tags>
     <repository type="git" url="https://github.com/masteriss/RezaB.Web" branch="master" />
